@@ -1,10 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { ExternalLink, Heart } from "lucide-react";
-import { SiX } from "react-icons/si";
+import { SiTelegram, SiX } from "react-icons/si";
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const hostname = encodeURIComponent(window.location.hostname);
 
   return (
     <footer
@@ -36,7 +34,7 @@ export function Footer() {
           {/* Links */}
           <div>
             <h4 className="font-heading font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">
-              Navigate
+              Access
             </h4>
             <ul className="space-y-2">
               {[
@@ -71,6 +69,15 @@ export function Footer() {
               >
                 <SiX className="w-4 h-4" />
               </a>
+              <a
+                href="https://t.me/doginal_pad"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-gold hover:bg-gold/10 transition-all border border-border/60 hover:border-gold/30"
+                aria-label="Telegram"
+              >
+                <SiTelegram className="w-4 h-4" />
+              </a>
             </div>
             <p className="text-xs text-muted-foreground mt-3">
               Payment: DOGE · Chain: Dogechain
@@ -82,17 +89,6 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             © {year} Doginalspad. All rights reserved.
           </p>
-          <a
-            href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${hostname}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1"
-          >
-            Built with{" "}
-            <Heart className="w-3 h-3 text-orange-accent fill-orange-accent mx-0.5" />{" "}
-            using caffeine.ai
-            <ExternalLink className="w-3 h-3 ml-0.5" />
-          </a>
         </div>
       </div>
     </footer>

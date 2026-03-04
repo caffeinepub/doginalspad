@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Loader2, LogIn, LogOut, Menu, Rocket, X } from "lucide-react";
+import { Clock, LogOut, Menu, Wallet, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
@@ -8,15 +8,14 @@ import { useIsCallerAdmin } from "../hooks/useQueries";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { login, clear, identity, isLoggingIn, isInitializing } =
-    useInternetIdentity();
+  const { clear, identity } = useInternetIdentity();
   const { data: isAdmin } = useIsCallerAdmin();
   const location = useLocation();
 
   const isLoggedIn = !!identity;
 
   const navLinks = [
-    { to: "/", label: "Home", ocid: "nav.home_link" },
+    { to: "/", label: "Access", ocid: "nav.home_link" },
     { to: "/launches", label: "Launches", ocid: "nav.launches_link" },
     { to: "/faq", label: "FAQ", ocid: "nav.faq_link" },
     ...(isAdmin
@@ -74,7 +73,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Auth Button */}
+        {/* Wallet Button - Desktop */}
         <div className="hidden md:flex items-center gap-3">
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
@@ -92,25 +91,34 @@ export function Navbar() {
               </Button>
             </div>
           ) : (
-            <Button
-              data-ocid="nav.login_button"
-              size="sm"
-              onClick={login}
-              disabled={isLoggingIn || isInitializing}
-              style={{
-                background:
-                  "linear-gradient(135deg, oklch(var(--gold)), oklch(var(--orange)))",
-                color: "oklch(var(--primary-foreground))",
-              }}
-              className="font-semibold text-sm shadow-glow-gold hover:opacity-90 transition-opacity"
-            >
-              {isLoggingIn ? (
-                <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
-              ) : (
-                <LogIn className="w-4 h-4 mr-1.5" />
-              )}
-              {isLoggingIn ? "Connecting…" : "Connect"}
-            </Button>
+            <div className="relative group">
+              <Button
+                data-ocid="nav.wallet_button"
+                size="sm"
+                disabled
+                style={{
+                  background:
+                    "linear-gradient(135deg, oklch(var(--gold) / 0.5), oklch(var(--orange) / 0.5))",
+                  color: "oklch(var(--primary-foreground))",
+                  cursor: "not-allowed",
+                }}
+                className="font-semibold text-sm opacity-75"
+              >
+                <Wallet className="w-4 h-4 mr-1.5" />
+                Connect Wallet
+              </Button>
+              <div
+                className="absolute top-full right-0 mt-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 flex items-center gap-1.5"
+                style={{
+                  background: "oklch(var(--surface))",
+                  border: "1px solid oklch(var(--gold) / 0.4)",
+                  color: "oklch(var(--gold))",
+                }}
+              >
+                <Clock className="w-3 h-3" />
+                Wallet Integration Coming Soon
+              </div>
+            </div>
           )}
         </div>
 
@@ -171,28 +179,30 @@ export function Navbar() {
                     Logout
                   </Button>
                 ) : (
-                  <Button
-                    data-ocid="nav.login_button"
-                    size="sm"
-                    onClick={() => {
-                      login();
-                      setMobileOpen(false);
-                    }}
-                    disabled={isLoggingIn || isInitializing}
-                    className="w-full font-semibold"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, oklch(var(--gold)), oklch(var(--orange)))",
-                      color: "oklch(var(--primary-foreground))",
-                    }}
-                  >
-                    {isLoggingIn ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Rocket className="w-4 h-4 mr-2" />
-                    )}
-                    {isLoggingIn ? "Connecting…" : "Connect Wallet"}
-                  </Button>
+                  <div className="space-y-1.5">
+                    <Button
+                      data-ocid="nav.wallet_button"
+                      size="sm"
+                      disabled
+                      className="w-full font-semibold opacity-75"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, oklch(var(--gold) / 0.5), oklch(var(--orange) / 0.5))",
+                        color: "oklch(var(--primary-foreground))",
+                        cursor: "not-allowed",
+                      }}
+                    >
+                      <Wallet className="w-4 h-4 mr-2" />
+                      Connect Wallet
+                    </Button>
+                    <div
+                      className="flex items-center justify-center gap-1.5 text-xs font-medium py-1"
+                      style={{ color: "oklch(var(--gold))" }}
+                    >
+                      <Clock className="w-3 h-3" />
+                      Wallet Integration Coming Soon
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
