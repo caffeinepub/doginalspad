@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/assets/fonts/CabinetGrotesk.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("/assets/fonts/Sora.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Doginalspad dark crypto theme — charcoal/void base with gold + orange accents */
+    --background: 0.11 0.005 260;
+    --foreground: 0.94 0.015 80;
+
+    --card: 0.15 0.008 260;
+    --card-foreground: 0.92 0.012 80;
+
+    --popover: 0.16 0.008 260;
+    --popover-foreground: 0.92 0.012 80;
+
+    /* Primary = rich gold */
+    --primary: 0.82 0.15 75;
+    --primary-foreground: 0.1 0.01 30;
+
+    /* Secondary = deep navy */
+    --secondary: 0.2 0.012 260;
+    --secondary-foreground: 0.88 0.015 80;
+
+    --muted: 0.18 0.01 260;
+    --muted-foreground: 0.6 0.02 80;
+
+    /* Accent = vibrant orange */
+    --accent: 0.7 0.18 45;
+    --accent-foreground: 0.1 0.01 30;
+
+    --destructive: 0.6 0.22 22;
+    --destructive-foreground: 0.98 0 0;
+
+    --border: 0.25 0.015 260;
+    --input: 0.22 0.012 260;
+    --ring: 0.82 0.15 75;
+
+    --chart-1: 0.82 0.15 75;
+    --chart-2: 0.7 0.18 45;
+    --chart-3: 0.6 0.18 200;
+    --chart-4: 0.55 0.22 145;
+    --chart-5: 0.6 0.22 22;
+
+    --sidebar: 0.13 0.006 260;
+    --sidebar-foreground: 0.92 0.012 80;
+    --sidebar-primary: 0.82 0.15 75;
+    --sidebar-primary-foreground: 0.1 0.01 30;
+    --sidebar-accent: 0.18 0.01 260;
+    --sidebar-accent-foreground: 0.92 0.012 80;
+    --sidebar-border: 0.25 0.015 260;
+    --sidebar-ring: 0.82 0.15 75;
+
+    /* Custom tokens */
+    --gold: 0.82 0.15 75;
+    --orange: 0.7 0.18 45;
+    --glow-gold: oklch(0.82 0.15 75 / 0.25);
+    --glow-orange: oklch(0.7 0.18 45 / 0.25);
+    --surface: 0.13 0.006 260;
+    --surface-2: 0.17 0.01 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Sora", sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Bricolage Grotesque", sans-serif;
+  }
+
+  .font-heading {
+    font-family: "Cabinet Grotesk", sans-serif;
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px var(--glow-gold), 0 0 40px oklch(0.82 0.15 75 / 0.1);
+  }
+
+  .glow-orange {
+    box-shadow: 0 0 20px var(--glow-orange), 0 0 40px oklch(0.7 0.18 45 / 0.1);
+  }
+
+  .card-glow {
+    box-shadow:
+      0 0 0 1px oklch(0.82 0.15 75 / 0.15),
+      0 4px 24px oklch(0.82 0.15 75 / 0.08),
+      0 1px 3px oklch(0 0 0 / 0.4);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-glow:hover {
+    box-shadow:
+      0 0 0 1px oklch(0.82 0.15 75 / 0.35),
+      0 8px 32px oklch(0.82 0.15 75 / 0.18),
+      0 2px 8px oklch(0 0 0 / 0.5);
+  }
+
+  .text-gold {
+    color: oklch(var(--gold));
+  }
+
+  .text-orange-accent {
+    color: oklch(var(--orange));
+  }
+
+  .bg-surface {
+    background: oklch(var(--surface));
+  }
+
+  .bg-surface-2 {
+    background: oklch(var(--surface-2));
+  }
+
+  .border-gold {
+    border-color: oklch(var(--gold) / 0.3);
+  }
+
+  .border-orange {
+    border-color: oklch(var(--orange) / 0.4);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, oklch(var(--gold)), oklch(var(--orange)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(oklch(0.82 0.15 75 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.82 0.15 75 / 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .status-live {
+    color: oklch(0.75 0.18 145);
+    background: oklch(0.75 0.18 145 / 0.12);
+    border: 1px solid oklch(0.75 0.18 145 / 0.3);
+  }
+
+  .status-upcoming {
+    color: oklch(0.7 0.16 240);
+    background: oklch(0.7 0.16 240 / 0.12);
+    border: 1px solid oklch(0.7 0.16 240 / 0.3);
+  }
+
+  .status-ended {
+    color: oklch(0.6 0.01 260);
+    background: oklch(0.6 0.01 260 / 0.12);
+    border: 1px solid oklch(0.6 0.01 260 / 0.3);
+  }
+}
