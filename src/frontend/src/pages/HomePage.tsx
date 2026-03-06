@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ChevronRight,
   DollarSign,
+  ExternalLink,
   Globe,
   Rocket,
   Shield,
@@ -283,6 +284,119 @@ export function HomePage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Apply for Launch CTA Section */}
+      <section className="py-20 border-t border-border/60 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 60% at 50% 50%, oklch(var(--gold) / 0.06) 0%, transparent 70%)",
+          }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            {/* Badge */}
+            <div
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 border"
+              style={{
+                background: "oklch(var(--gold) / 0.08)",
+                borderColor: "oklch(var(--gold) / 0.25)",
+                color: "oklch(var(--gold))",
+              }}
+            >
+              <Rocket className="w-3.5 h-3.5" />
+              Open for Applications
+            </div>
+
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground mb-4 leading-tight">
+              Launch Your Project on{" "}
+              <span className="gradient-text">DoginalsPad</span>
+            </h2>
+
+            <p className="text-muted-foreground text-base sm:text-lg max-w-lg mx-auto mb-10 leading-relaxed">
+              Ready to bring your DRC20 token to the Dogechain community? Apply
+              now and our team will review your project for an upcoming launch
+              slot.
+            </p>
+
+            {/* Feature bullets */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 text-left">
+              {[
+                {
+                  icon: Shield,
+                  label: "Verified listing",
+                  desc: "Manual review by the team",
+                },
+                {
+                  icon: Zap,
+                  label: "DOGE payments",
+                  desc: "Seamless participation",
+                },
+                {
+                  icon: Globe,
+                  label: "Dogechain native",
+                  desc: "Built for DRC20 tokens",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-start gap-3 rounded-xl p-4 border border-border/50"
+                  style={{ background: "oklch(var(--card))" }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ background: "oklch(var(--gold) / 0.12)" }}
+                  >
+                    <item.icon className="w-4 h-4 text-gold" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-foreground">
+                      {item.label}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Button */}
+            <a
+              data-ocid="apply.primary_button"
+              href="https://form.svhrt.com/69aa6ffe2ac0ef04c5b1239c"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                size="lg"
+                className="font-bold text-base px-10 py-6 shadow-glow-gold hover:opacity-90 transition-all duration-200 hover:scale-105"
+                style={{
+                  background:
+                    "linear-gradient(135deg, oklch(var(--gold)), oklch(var(--orange)))",
+                  color: "oklch(var(--primary-foreground))",
+                }}
+              >
+                <Rocket className="w-5 h-5 mr-2" />
+                Apply for Launch
+                <ExternalLink className="w-4 h-4 ml-2 opacity-80" />
+              </Button>
+            </a>
+
+            <p className="text-xs text-muted-foreground mt-4 opacity-70">
+              Applications reviewed within 3–5 business days
+            </p>
+          </motion.div>
         </div>
       </section>
 
