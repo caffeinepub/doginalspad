@@ -18,11 +18,11 @@ declare global {
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <InternetIdentityProvider>
-      <ThemeProvider>
+  <ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <InternetIdentityProvider>
         <App />
-      </ThemeProvider>
-    </InternetIdentityProvider>
-  </QueryClientProvider>,
+      </InternetIdentityProvider>
+    </QueryClientProvider>
+  </ThemeProvider>,
 );

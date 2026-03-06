@@ -72,7 +72,7 @@ export function HomePage() {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, oklch(0.11 0.005 260 / 0.75) 0%, oklch(0.11 0.005 260 / 0.88) 60%, oklch(0.11 0.005 260) 100%)",
+                "linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.82) 60%, rgba(0,0,0,0.95) 100%)",
             }}
           />
           {/* Grid overlay */}
@@ -86,9 +86,9 @@ export function HomePage() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 border"
             style={{
-              background: "oklch(var(--gold) / 0.1)",
-              borderColor: "oklch(var(--gold) / 0.3)",
-              color: "oklch(var(--gold))",
+              background: "rgba(255,165,0,0.15)",
+              borderColor: "rgba(255,165,0,0.4)",
+              color: "#f5a623",
             }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
@@ -99,7 +99,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl leading-tight mb-5 max-w-3xl mx-auto"
+            className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl leading-tight mb-5 max-w-3xl mx-auto text-white"
           >
             The <span className="gradient-text">#1 DRC20 Token</span>
             <br />
@@ -110,7 +110,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-8 leading-relaxed"
+            className="text-base sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed text-white/80"
           >
             Discover and participate in the latest token launches. Payment in{" "}
             <span className="text-gold font-semibold">DOGE</span>. Powered by
@@ -142,7 +142,12 @@ export function HomePage() {
               variant="outline"
               size="lg"
               onClick={() => navigate({ to: "/faq" })}
-              className="font-semibold text-sm border-gold/30 text-gold hover:bg-gold/10 hover:border-gold/60"
+              className="font-semibold text-sm"
+              style={{
+                borderColor: "rgba(255,165,0,0.5)",
+                color: "#f5a623",
+                background: "transparent",
+              }}
             >
               Learn More
             </Button>
