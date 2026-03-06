@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Clock, ExternalLink, LogOut, Menu, Wallet, X } from "lucide-react";
+import {
+  Clock,
+  ExternalLink,
+  LogOut,
+  Menu,
+  Moon,
+  Sun,
+  Wallet,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { useTheme } from "../contexts/ThemeContext";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useIsCallerAdmin } from "../hooks/useQueries";
 
@@ -11,6 +21,7 @@ export function Navbar() {
   const { clear, identity } = useInternetIdentity();
   const { data: isAdmin } = useIsCallerAdmin();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const isLoggedIn = !!identity;
 
@@ -75,6 +86,76 @@ export function Navbar() {
 
         {/* Wallet Button - Desktop */}
         <div className="hidden md:flex items-center gap-3">
+          {/* Theme Toggle - Desktop pill */}
+          <fieldset
+            data-ocid="nav.theme_toggle"
+            aria-label="Theme toggle"
+            className="flex items-center rounded-full p-0.5 gap-0.5 border-0 m-0"
+            style={{
+              background: "oklch(var(--surface-2))",
+              outline: "1px solid oklch(var(--border))",
+              padding: "2px",
+            }}
+          >
+            <button
+              type="button"
+              aria-label="Switch to light mode"
+              aria-pressed={theme === "light"}
+              onClick={() => theme === "dark" && toggleTheme()}
+              className="relative w-8 h-7 rounded-full flex items-center justify-center transition-all duration-200"
+              style={{
+                background:
+                  theme === "light"
+                    ? "oklch(var(--orange) / 0.18)"
+                    : "transparent",
+                color:
+                  theme === "light"
+                    ? "oklch(var(--orange))"
+                    : "oklch(var(--muted-foreground))",
+              }}
+            >
+              <Sun className="w-3.5 h-3.5" />
+              {theme === "light" && (
+                <motion.span
+                  layoutId="theme-pill-indicator"
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    boxShadow: "0 0 0 1.5px oklch(var(--orange) / 0.4)",
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              type="button"
+              aria-label="Switch to dark mode"
+              aria-pressed={theme === "dark"}
+              onClick={() => theme === "light" && toggleTheme()}
+              className="relative w-8 h-7 rounded-full flex items-center justify-center transition-all duration-200"
+              style={{
+                background:
+                  theme === "dark"
+                    ? "oklch(var(--gold) / 0.18)"
+                    : "transparent",
+                color:
+                  theme === "dark"
+                    ? "oklch(var(--gold))"
+                    : "oklch(var(--muted-foreground))",
+              }}
+            >
+              <Moon className="w-3.5 h-3.5" />
+              {theme === "dark" && (
+                <motion.span
+                  layoutId="theme-pill-indicator"
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    boxShadow: "0 0 0 1.5px oklch(var(--gold) / 0.4)",
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+            </button>
+          </fieldset>
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground font-medium px-2.5 py-1 rounded-full bg-muted/50">
@@ -229,6 +310,72 @@ export function Navbar() {
                     </div>
                   </div>
                 )}
+              </div>
+              {/* Theme Toggle - Mobile */}
+              <div className="border-t border-border/40 pt-2 mt-1 px-1">
+                <div className="flex items-center justify-between px-2.5 py-2">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Theme
+                  </span>
+                  {/* Pill toggle */}
+                  <fieldset
+                    data-ocid="nav.theme_toggle"
+                    aria-label="Theme toggle"
+                    className="flex items-center rounded-full gap-0.5 border-0 m-0"
+                    style={{
+                      background: "oklch(var(--surface-2))",
+                      outline: "1px solid oklch(var(--border))",
+                      padding: "2px",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      aria-label="Switch to light mode"
+                      aria-pressed={theme === "light"}
+                      onClick={() => {
+                        if (theme === "dark") toggleTheme();
+                        setMobileOpen(false);
+                      }}
+                      className="relative flex items-center gap-1.5 px-3 h-8 rounded-full text-xs font-semibold transition-all duration-200"
+                      style={{
+                        background:
+                          theme === "light"
+                            ? "oklch(var(--orange) / 0.18)"
+                            : "transparent",
+                        color:
+                          theme === "light"
+                            ? "oklch(var(--orange))"
+                            : "oklch(var(--muted-foreground))",
+                      }}
+                    >
+                      <Sun className="w-3.5 h-3.5 flex-shrink-0" />
+                      Light
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Switch to dark mode"
+                      aria-pressed={theme === "dark"}
+                      onClick={() => {
+                        if (theme === "light") toggleTheme();
+                        setMobileOpen(false);
+                      }}
+                      className="relative flex items-center gap-1.5 px-3 h-8 rounded-full text-xs font-semibold transition-all duration-200"
+                      style={{
+                        background:
+                          theme === "dark"
+                            ? "oklch(var(--gold) / 0.18)"
+                            : "transparent",
+                        color:
+                          theme === "dark"
+                            ? "oklch(var(--gold))"
+                            : "oklch(var(--muted-foreground))",
+                      }}
+                    >
+                      <Moon className="w-3.5 h-3.5 flex-shrink-0" />
+                      Dark
+                    </button>
+                  </fieldset>
+                </div>
               </div>
             </div>
           </motion.div>

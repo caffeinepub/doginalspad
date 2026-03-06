@@ -86,12 +86,65 @@
     --surface-2: 0.17 0.01 260;
   }
 
+  /* Light theme overrides */
+  html.light {
+    color-scheme: light;
+    --background: 0.97 0.005 80;
+    --foreground: 0.15 0.01 260;
+
+    --card: 0.95 0.005 80;
+    --card-foreground: 0.15 0.01 260;
+
+    --popover: 0.96 0.005 80;
+    --popover-foreground: 0.15 0.01 260;
+
+    --primary: 0.7 0.15 75;
+    --primary-foreground: 0.98 0 0;
+
+    --secondary: 0.9 0.01 260;
+    --secondary-foreground: 0.2 0.012 260;
+
+    --muted: 0.92 0.008 80;
+    --muted-foreground: 0.45 0.02 80;
+
+    --accent: 0.7 0.18 45;
+    --accent-foreground: 0.98 0 0;
+
+    --destructive: 0.55 0.22 22;
+    --destructive-foreground: 0.98 0 0;
+
+    --border: 0.85 0.01 80;
+    --input: 0.88 0.01 80;
+    --ring: 0.7 0.15 75;
+
+    --sidebar: 0.93 0.006 80;
+    --sidebar-foreground: 0.15 0.01 260;
+    --sidebar-primary: 0.7 0.15 75;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.9 0.01 260;
+    --sidebar-accent-foreground: 0.2 0.012 260;
+    --sidebar-border: 0.85 0.01 80;
+    --sidebar-ring: 0.7 0.15 75;
+
+    /* Custom tokens — keep gold/orange brand accents */
+    --gold: 0.72 0.15 70;
+    --orange: 0.65 0.18 45;
+    --glow-gold: oklch(0.72 0.15 70 / 0.2);
+    --glow-orange: oklch(0.65 0.18 45 / 0.2);
+    --surface: 0.95 0.005 80;
+    --surface-2: 0.92 0.008 80;
+  }
+
   * {
     @apply border-border;
   }
 
   html {
     color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
   }
 
   body {
