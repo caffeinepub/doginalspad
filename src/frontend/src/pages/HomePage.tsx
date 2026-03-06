@@ -374,7 +374,7 @@ export function HomePage() {
             {/* CTA Button */}
             <a
               data-ocid="apply.primary_button"
-              href="https://form.svhrt.com/69aa6ffe2ac0ef04c5b1239c"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfGh6xYUUcmLMuYHIQ6-E40z3FMWbeI2vXWXz8i7p2gAfhFPg/viewform"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -396,6 +396,165 @@ export function HomePage() {
             <p className="text-xs text-muted-foreground mt-4 opacity-70">
               Applications reviewed within 3–5 business days
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Buy $PAD on Doggy Market Section */}
+      <section className="py-20 border-t border-border/60 relative overflow-hidden">
+        {/* Background glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 50%, oklch(var(--orange) / 0.07) 0%, transparent 70%)",
+          }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+            className="max-w-4xl mx-auto"
+          >
+            {/* Section header */}
+            <div className="text-center mb-12">
+              <div
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-5 border"
+                style={{
+                  background: "oklch(var(--gold) / 0.08)",
+                  borderColor: "oklch(var(--gold) / 0.25)",
+                  color: "oklch(var(--gold))",
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                Now Available
+              </div>
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground mb-4 leading-tight">
+                Buy <span className="gradient-text">$PAD</span> on Doggy Market
+              </h2>
+              <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                $PAD is now live on Doggy Market — the premier DRC20 marketplace
+                on Dogechain. Get your allocation before supply runs out.
+              </p>
+            </div>
+
+            {/* Card */}
+            <div
+              className="rounded-2xl border border-border/60 overflow-hidden card-glow"
+              style={{ background: "oklch(var(--card))" }}
+            >
+              <div className="flex flex-col md:flex-row items-stretch">
+                {/* Image side */}
+                <div className="md:w-2/5 relative">
+                  <img
+                    src="/assets/uploads/20260306_155957-1.jpg"
+                    alt="Doggy Market"
+                    className="w-full h-64 md:h-full object-cover object-center"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, transparent 60%, oklch(var(--card)) 100%)",
+                    }}
+                  />
+                </div>
+
+                {/* Content side */}
+                <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-gold/30">
+                      <img
+                        src="/assets/uploads/safeimagekit-resized-1000054881-1-1.png"
+                        alt="$PAD Token"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-display font-extrabold text-xl text-foreground">
+                        $PAD Token
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        DRC20 · Dogechain
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                    The official utility token of the DoginalsPad launchpad.
+                    Access exclusive project launches, earn ecosystem rewards,
+                    and be part of the Dogechain revolution.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center mb-6">
+                    <div
+                      className="px-4 py-2 rounded-lg text-center"
+                      style={{
+                        background: "oklch(var(--gold) / 0.1)",
+                        border: "1px solid oklch(var(--gold) / 0.2)",
+                      }}
+                    >
+                      <p className="text-xs text-muted-foreground">Price</p>
+                      <p className="font-bold text-gold text-base">
+                        1 DOGE / $PAD
+                      </p>
+                    </div>
+                    <div
+                      className="px-4 py-2 rounded-lg text-center"
+                      style={{
+                        background: "oklch(var(--gold) / 0.1)",
+                        border: "1px solid oklch(var(--gold) / 0.2)",
+                      }}
+                    >
+                      <p className="text-xs text-muted-foreground">
+                        Total Supply
+                      </p>
+                      <p className="font-bold text-gold text-base">100,000</p>
+                    </div>
+                    <div
+                      className="px-4 py-2 rounded-lg text-center"
+                      style={{
+                        background: "oklch(var(--gold) / 0.1)",
+                        border: "1px solid oklch(var(--gold) / 0.2)",
+                      }}
+                    >
+                      <p className="text-xs text-muted-foreground">Market</p>
+                      <p className="font-bold text-gold text-base">
+                        Doggy Market
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    data-ocid="buy-pad.primary_button"
+                    href="https://doggy.market/$pad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
+                  >
+                    <Button
+                      size="lg"
+                      className="font-bold text-base px-8 py-5 shadow-glow-gold hover:opacity-90 transition-all duration-200 hover:scale-105 w-full sm:w-auto"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, oklch(var(--gold)), oklch(var(--orange)))",
+                        color: "oklch(var(--primary-foreground))",
+                      }}
+                    >
+                      <DollarSign className="w-5 h-5 mr-2" />
+                      Buy $PAD
+                      <ExternalLink className="w-4 h-4 ml-2 opacity-80" />
+                    </Button>
+                  </a>
+
+                  <p className="text-xs text-muted-foreground mt-3 opacity-70">
+                    Opens Doggy Market — the DRC20 marketplace on Dogechain
+                  </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

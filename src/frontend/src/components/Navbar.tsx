@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Clock, LogOut, Menu, Wallet, X } from "lucide-react";
+import { Clock, ExternalLink, LogOut, Menu, Wallet, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
@@ -15,7 +15,7 @@ export function Navbar() {
   const isLoggedIn = !!identity;
 
   const navLinks = [
-    { to: "/", label: "Access", ocid: "nav.home_link" },
+    { to: "/", label: "Homepage", ocid: "nav.home_link" },
     { to: "/launches", label: "Launches", ocid: "nav.launches_link" },
     { to: "/faq", label: "FAQ", ocid: "nav.faq_link" },
     ...(isAdmin
@@ -164,7 +164,32 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-2 pb-1">
+              {/* External action links */}
+              <div className="border-t border-border/40 pt-2 mt-1 flex flex-col gap-1">
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSfGh6xYUUcmLMuYHIQ6-E40z3FMWbeI2vXWXz8i7p2gAfhFPg/viewform"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-ocid="nav.apply_launch_link"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                  Apply for Launch
+                </a>
+                <a
+                  href="https://doggy.market/$pad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-ocid="nav.buy_pad_link"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-gold hover:bg-gold/10 transition-all"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                  Buy on Doggy Market
+                </a>
+              </div>
+              <div className="pt-1 pb-1">
                 {isLoggedIn ? (
                   <Button
                     variant="ghost"
