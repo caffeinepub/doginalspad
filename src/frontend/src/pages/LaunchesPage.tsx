@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { LaunchCard } from "../components/LaunchCard";
 import { LaunchDetailModal } from "../components/LaunchDetailModal";
+import { useLanguage } from "../contexts/LanguageContext";
 import { mergeWithPadFallback } from "../data/padLaunch";
 import type { LaunchWithImage } from "../data/padLaunch";
 import { LaunchStatus, useGetAllLaunches } from "../hooks/useQueries";
@@ -19,6 +20,7 @@ export function LaunchesPage() {
   );
   const [filter, setFilter] = useState<FilterTab>("all");
   const [search, setSearch] = useState("");
+  const { t } = useLanguage();
 
   const mergedLaunches = mergeWithPadFallback(launches ?? []);
 
@@ -32,10 +34,10 @@ export function LaunchesPage() {
   });
 
   const tabs: { value: FilterTab; label: string }[] = [
-    { value: "all", label: "All" },
-    { value: LaunchStatus.upcoming, label: "Upcoming" },
-    { value: LaunchStatus.live, label: "Live" },
-    { value: LaunchStatus.ended, label: "Ended" },
+    { value: "all", label: t("launches.all") },
+    { value: LaunchStatus.upcoming, label: t("launches.upcoming") },
+    { value: LaunchStatus.live, label: t("launches.live") },
+    { value: LaunchStatus.ended, label: t("launches.ended") },
   ];
 
   return (
@@ -48,10 +50,10 @@ export function LaunchesPage() {
         className="mb-8"
       >
         <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-foreground mb-2">
-          All Launches
+          {t("launches.title")}
         </h1>
         <p className="text-muted-foreground text-sm">
-          Browse and participate in DRC20 token launches. Payment in DOGE.
+          {t("launches.subtitle")}
         </p>
       </motion.div>
 
@@ -92,7 +94,7 @@ export function LaunchesPage() {
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search projects..."
+            placeholder={t("launches.search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 border-border/60 bg-muted/30 text-sm h-9"
@@ -131,12 +133,12 @@ export function LaunchesPage() {
             <Rocket className="w-7 h-7 text-gold" />
           </div>
           <h3 className="font-heading font-bold text-lg text-foreground mb-1">
-            No Launches Found
+            {t("launches.no_launches_title")}
           </h3>
           <p className="text-sm text-muted-foreground max-w-xs">
             {filter === "all"
-              ? "No token launches have been created yet. Check back soon!"
-              : `No ${filter} launches at the moment.`}
+              ? t("launches.no_launches_all")
+              : t("launches.no_launches_filter", { filter })}
           </p>
         </motion.div>
       ) : (

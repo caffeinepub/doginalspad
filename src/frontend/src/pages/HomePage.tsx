@@ -3,48 +3,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
+  ChevronDown,
   ChevronRight,
   DollarSign,
   ExternalLink,
   Globe,
+  Languages,
   Rocket,
   Shield,
   Zap,
 } from "lucide-react";
-import { motion } from "motion/react";
-import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useRef, useState } from "react";
 import { LaunchCard } from "../components/LaunchCard";
 import { LaunchDetailModal } from "../components/LaunchDetailModal";
+import { LANGUAGES, useLanguage } from "../contexts/LanguageContext";
 import { mergeWithPadFallback } from "../data/padLaunch";
 import type { LaunchWithImage } from "../data/padLaunch";
 import { useGetAllLaunches } from "../hooks/useQueries";
-
-const stats = [
-  { icon: Zap, label: "Launches Live", value: "1" },
-  { icon: DollarSign, label: "Payment", value: "DOGE" },
-  { icon: Globe, label: "Chain", value: "Dogechain" },
-];
-
-const features = [
-  {
-    icon: Rocket,
-    title: "Token Launchpad",
-    description:
-      "Launch your DRC20 token with full transparency, real-time tracking, and community trust.",
-  },
-  {
-    icon: Shield,
-    title: "Secure & Verified",
-    description:
-      "Every project goes through a verification process. Invest with confidence on Dogechain.",
-  },
-  {
-    icon: Zap,
-    title: "Instant DOGE Payments",
-    description:
-      "Participate in launches instantly using DOGE — the fastest, most beloved crypto.",
-  },
-];
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -52,9 +28,39 @@ export function HomePage() {
   const [selectedLaunch, setSelectedLaunch] = useState<LaunchWithImage | null>(
     null,
   );
+  const { t, language, setLanguage } = useLanguage();
+  const [heroLangOpen, setHeroLangOpen] = useState(false);
+  const heroLangRef = useRef<HTMLDivElement>(null);
+
+  const currentLang =
+    LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
 
   const mergedLaunches = mergeWithPadFallback(launches ?? []);
   const featuredLaunch = mergedLaunches[0] ?? null;
+
+  const stats = [
+    { icon: Zap, label: t("stats.launches_live"), value: "1" },
+    { icon: DollarSign, label: t("stats.payment"), value: "DOGE" },
+    { icon: Globe, label: t("stats.chain"), value: "Dogechain" },
+  ];
+
+  const features = [
+    {
+      icon: Rocket,
+      title: t("features.token_launchpad"),
+      description: t("features.token_launchpad_desc"),
+    },
+    {
+      icon: Shield,
+      title: t("features.secure"),
+      description: t("features.secure_desc"),
+    },
+    {
+      icon: Zap,
+      title: t("features.payments"),
+      description: t("features.payments_desc"),
+    },
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -80,6 +86,110 @@ export function HomePage() {
         </div>
 
         <div className="relative z-10 container mx-auto px-4 pt-20 pb-16 text-center">
+          {/* Hero Language Selector - top right */}
+          <div
+            className="absolute top-4 right-4 sm:top-6 sm:right-6"
+            ref={heroLangRef}
+          >
+            <button
+              type="button"
+              data-ocid="hero.language_toggle"
+              onClick={() => setHeroLangOpen(!heroLangOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border backdrop-blur-md"
+              style={{
+                background: heroLangOpen
+                  ? "rgba(0,0,0,0.75)"
+                  : "rgba(0,0,0,0.55)",
+                borderColor: heroLangOpen
+                  ? "rgba(245,166,35,0.7)"
+                  : "rgba(245,166,35,0.4)",
+                color: heroLangOpen ? "#f5a623" : "rgba(255,255,255,0.9)",
+                boxShadow: heroLangOpen
+                  ? "0 0 16px rgba(245,166,35,0.25)"
+                  : "none",
+              }}
+            >
+              <Languages className="w-4 h-4 flex-shrink-0" />
+              <span className="text-base leading-none">{currentLang.flag}</span>
+              <span className="hidden sm:inline">{currentLang.label}</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${heroLangOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {heroLangOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="absolute right-0 top-full mt-2 w-48 rounded-2xl overflow-hidden shadow-2xl z-50 border"
+                  style={{
+                    background: "rgba(10,10,10,0.92)",
+                    borderColor: "rgba(245,166,35,0.3)",
+                    backdropFilter: "blur(16px)",
+                  }}
+                >
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      data-ocid={`hero.lang_${lang.code}_button`}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setHeroLangOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-150 text-left"
+                      style={{
+                        background:
+                          language === lang.code
+                            ? "rgba(245,166,35,0.12)"
+                            : "transparent",
+                        color:
+                          language === lang.code
+                            ? "#f5a623"
+                            : "rgba(255,255,255,0.88)",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (language !== lang.code) {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.background = "rgba(255,255,255,0.06)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (language !== lang.code) {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.background = "transparent";
+                        }
+                      }}
+                    >
+                      <span className="text-lg leading-none">{lang.flag}</span>
+                      <span>{lang.label}</span>
+                      {language === lang.code && (
+                        <span className="ml-auto text-xs opacity-80">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Click outside overlay */}
+            {heroLangOpen && (
+              <div
+                role="button"
+                tabIndex={-1}
+                aria-label="Close language menu"
+                className="fixed inset-0 z-40"
+                onClick={() => setHeroLangOpen(false)}
+                onKeyDown={(e) => e.key === "Escape" && setHeroLangOpen(false)}
+              />
+            )}
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -92,7 +202,7 @@ export function HomePage() {
             }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            Live on Dogechain · DRC20 Token Launchpad
+            {t("hero.badge")}
           </motion.div>
 
           <motion.h1
@@ -101,9 +211,9 @@ export function HomePage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl leading-tight mb-5 max-w-3xl mx-auto text-white"
           >
-            The <span className="gradient-text">#1 DRC20 Token</span>
-            <br />
-            Launchpad on Dogechain
+            {t("hero.title_part1")}
+            <span className="gradient-text">{t("hero.title_part2")}</span>
+            {t("hero.title_part3")}
           </motion.h1>
 
           <motion.p
@@ -112,9 +222,21 @@ export function HomePage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-base sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed text-white/80"
           >
-            Discover and participate in the latest token launches. Payment in{" "}
-            <span className="text-gold font-semibold">DOGE</span>. Powered by
-            the Dogechain ecosystem.
+            {(() => {
+              const parts = t("hero.subtitle").split("DOGE");
+              return parts.map((part, i) =>
+                i < parts.length - 1 ? (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                  <span key={i}>
+                    {part}
+                    <span className="text-gold font-semibold">DOGE</span>
+                  </span>
+                ) : (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                  <span key={i}>{part}</span>
+                ),
+              );
+            })()}
           </motion.p>
 
           <motion.div
@@ -135,7 +257,7 @@ export function HomePage() {
               }}
             >
               <Rocket className="w-4 h-4 mr-2" />
-              View Launches
+              {t("hero.view_launches")}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <Button
@@ -149,7 +271,7 @@ export function HomePage() {
                 background: "transparent",
               }}
             >
-              Learn More
+              {t("hero.learn_more")}
             </Button>
           </motion.div>
         </div>
@@ -201,10 +323,10 @@ export function HomePage() {
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-foreground">
-              Featured Launch
+              {t("featured.title")}
             </h2>
             <p className="text-muted-foreground mt-1 text-sm">
-              The inaugural DRC20 token launch on Doginalspad
+              {t("featured.subtitle")}
             </p>
           </div>
           <Button
@@ -213,7 +335,7 @@ export function HomePage() {
             onClick={() => navigate({ to: "/launches" })}
             className="text-gold hover:bg-gold/10 gap-1 hidden sm:flex"
           >
-            All Launches <ChevronRight className="w-4 h-4" />
+            {t("featured.all_launches")} <ChevronRight className="w-4 h-4" />
           </Button>
         </motion.div>
 
@@ -234,7 +356,7 @@ export function HomePage() {
           </div>
         ) : (
           <p className="text-muted-foreground text-sm">
-            No launches yet. Check back soon!
+            {t("featured.no_launches")}
           </p>
         )}
       </section>
@@ -253,11 +375,10 @@ export function HomePage() {
             className="text-center mb-10"
           >
             <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-foreground mb-3">
-              Why Doginalspad?
+              {t("features.title")}
             </h2>
             <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-              The most trusted platform to launch and discover DRC20 tokens on
-              Dogechain.
+              {t("features.subtitle")}
             </p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -321,14 +442,27 @@ export function HomePage() {
                 }}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                Now Available
+                {t("buy_pad.badge")}
               </div>
               <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground mb-4 leading-tight">
-                Buy <span className="gradient-text">$PAD</span> on Doggy Market
+                {(() => {
+                  const parts = t("buy_pad.title").split("$PAD");
+                  return parts.map((part, i) =>
+                    i < parts.length - 1 ? (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                      <span key={i}>
+                        {part}
+                        <span className="gradient-text">$PAD</span>
+                      </span>
+                    ) : (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                      <span key={i}>{part}</span>
+                    ),
+                  );
+                })()}
               </h2>
               <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-                $PAD is now live on Doggy Market — the premier DRC20 marketplace
-                on Dogechain. Get your allocation before supply runs out.
+                {t("buy_pad.subtitle")}
               </p>
             </div>
 
@@ -369,15 +503,13 @@ export function HomePage() {
                         $PAD Token
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        DRC20 · Dogechain
+                        {t("buy_pad.token_subtitle")}
                       </p>
                     </div>
                   </div>
 
                   <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                    The official utility token of the DoginalsPad launchpad.
-                    Access exclusive project launches, earn ecosystem rewards,
-                    and be part of the Dogechain revolution.
+                    {t("buy_pad.token_desc")}
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center mb-6">
@@ -388,7 +520,9 @@ export function HomePage() {
                         border: "1px solid oklch(var(--gold) / 0.2)",
                       }}
                     >
-                      <p className="text-xs text-muted-foreground">Price</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("buy_pad.price")}
+                      </p>
                       <p className="font-bold text-gold text-base">
                         1 DOGE / $PAD
                       </p>
@@ -401,7 +535,7 @@ export function HomePage() {
                       }}
                     >
                       <p className="text-xs text-muted-foreground">
-                        Total Supply
+                        {t("buy_pad.supply")}
                       </p>
                       <p className="font-bold text-gold text-base">100,000</p>
                     </div>
@@ -412,7 +546,9 @@ export function HomePage() {
                         border: "1px solid oklch(var(--gold) / 0.2)",
                       }}
                     >
-                      <p className="text-xs text-muted-foreground">Market</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("buy_pad.market")}
+                      </p>
                       <p className="font-bold text-gold text-base">
                         Doggy Market
                       </p>
@@ -436,13 +572,13 @@ export function HomePage() {
                       }}
                     >
                       <DollarSign className="w-5 h-5 mr-2" />
-                      Buy $PAD
+                      {t("buy_pad.button")}
                       <ExternalLink className="w-4 h-4 ml-2 opacity-80" />
                     </Button>
                   </a>
 
                   <p className="text-xs text-muted-foreground mt-3 opacity-70">
-                    Opens Doggy Market — the DRC20 marketplace on Dogechain
+                    {t("buy_pad.note")}
                   </p>
                 </div>
               </div>
@@ -479,18 +615,29 @@ export function HomePage() {
               }}
             >
               <Rocket className="w-3.5 h-3.5" />
-              Open for Applications
+              {t("apply.badge")}
             </div>
 
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground mb-4 leading-tight">
-              Launch Your Project on{" "}
-              <span className="gradient-text">DoginalsPad</span>
+              {(() => {
+                const parts = t("apply.title").split("DoginalsPad");
+                return parts.map((part, i) =>
+                  i < parts.length - 1 ? (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                    <span key={i}>
+                      {part}
+                      <span className="gradient-text">DoginalsPad</span>
+                    </span>
+                  ) : (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static split array
+                    <span key={i}>{part}</span>
+                  ),
+                );
+              })()}
             </h2>
 
             <p className="text-muted-foreground text-base sm:text-lg max-w-lg mx-auto mb-10 leading-relaxed">
-              Ready to bring your DRC20 token to the Dogechain community? Apply
-              now and our team will review your project for an upcoming launch
-              slot.
+              {t("apply.subtitle")}
             </p>
 
             {/* Feature bullets */}
@@ -498,18 +645,18 @@ export function HomePage() {
               {[
                 {
                   icon: Shield,
-                  label: "Verified listing",
-                  desc: "Manual review by the team",
+                  label: t("apply.verified"),
+                  desc: t("apply.verified_desc"),
                 },
                 {
                   icon: Zap,
-                  label: "DOGE payments",
-                  desc: "Seamless participation",
+                  label: t("apply.doge_payments"),
+                  desc: t("apply.doge_payments_desc"),
                 },
                 {
                   icon: Globe,
-                  label: "Dogechain native",
-                  desc: "Built for DRC20 tokens",
+                  label: t("apply.dogechain"),
+                  desc: t("apply.dogechain_desc"),
                 },
               ].map((item) => (
                 <div
@@ -552,13 +699,13 @@ export function HomePage() {
                 }}
               >
                 <Rocket className="w-5 h-5 mr-2" />
-                Apply for Launch
+                {t("apply.button")}
                 <ExternalLink className="w-4 h-4 ml-2 opacity-80" />
               </Button>
             </a>
 
             <p className="text-xs text-muted-foreground mt-4 opacity-70">
-              Applications reviewed within 3–5 business days
+              {t("apply.note")}
             </p>
           </motion.div>
         </div>

@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import { InternetIdentityProvider } from "./hooks/useInternetIdentity";
 import "../index.css";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 BigInt.prototype.toJSON = function () {
   return this.toString();
@@ -18,11 +19,13 @@ declare global {
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <InternetIdentityProvider>
-        <App />
-      </InternetIdentityProvider>
-    </QueryClientProvider>
-  </ThemeProvider>,
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
+      <LanguageProvider>
+        <InternetIdentityProvider>
+          <App />
+        </InternetIdentityProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  </QueryClientProvider>,
 );

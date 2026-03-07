@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { SiTelegram, SiX } from "react-icons/si";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer
@@ -26,21 +28,20 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Launching the future of DRC20 tokens on Dogechain. The first and
-              most trusted launchpad in the Doge ecosystem.
+              {t("footer.tagline")}
             </p>
           </div>
 
           {/* Links */}
           <div>
             <h4 className="font-heading font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">
-              Access
+              {t("footer.access")}
             </h4>
             <ul className="space-y-2">
               {[
-                { to: "/", label: "Home" },
-                { to: "/launches", label: "Launches" },
-                { to: "/faq", label: "FAQ" },
+                { to: "/", label: t("footer.home") },
+                { to: "/launches", label: t("nav.launches") },
+                { to: "/faq", label: t("nav.faq") },
               ].map((link) => (
                 <li key={link.to}>
                   <Link
@@ -57,7 +58,7 @@ export function Footer() {
           {/* Community */}
           <div>
             <h4 className="font-heading font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">
-              Community
+              {t("footer.community")}
             </h4>
             <div className="flex items-center gap-3">
               <a
@@ -80,14 +81,14 @@ export function Footer() {
               </a>
             </div>
             <p className="text-xs text-muted-foreground mt-3">
-              Payment: DOGE · Chain: Dogechain
+              {t("footer.chain_info")}
             </p>
           </div>
         </div>
 
         <div className="border-t border-border/40 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            © {year} Doginalspad. All rights reserved.
+            {t("footer.copyright", { year: String(year) })}
           </p>
         </div>
       </div>

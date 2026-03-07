@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
+  ChevronDown,
   Clock,
   ExternalLink,
+  Languages,
   LogOut,
   Menu,
   Moon,
@@ -11,26 +13,33 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { LANGUAGES, useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useIsCallerAdmin } from "../hooks/useQueries";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
   const { clear, identity } = useInternetIdentity();
   const { data: isAdmin } = useIsCallerAdmin();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
 
   const isLoggedIn = !!identity;
 
+  const currentLang =
+    LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
+
   const navLinks = [
-    { to: "/", label: "Homepage", ocid: "nav.home_link" },
-    { to: "/launches", label: "Launches", ocid: "nav.launches_link" },
-    { to: "/faq", label: "FAQ", ocid: "nav.faq_link" },
+    { to: "/", label: t("nav.homepage"), ocid: "nav.home_link" },
+    { to: "/launches", label: t("nav.launches"), ocid: "nav.launches_link" },
+    { to: "/faq", label: t("nav.faq"), ocid: "nav.faq_link" },
     ...(isAdmin
-      ? [{ to: "/admin", label: "Admin", ocid: "nav.admin_link" }]
+      ? [{ to: "/admin", label: t("nav.admin"), ocid: "nav.admin_link" }]
       : []),
   ];
 
@@ -84,7 +93,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Wallet Button - Desktop */}
+        {/* Right side - Desktop */}
         <div className="hidden md:flex items-center gap-3">
           {/* Theme Toggle - Desktop pill */}
           <fieldset
@@ -156,6 +165,107 @@ export function Navbar() {
               )}
             </button>
           </fieldset>
+
+          {/* Language Selector - Desktop */}
+          <div className="relative" ref={langDropdownRef}>
+            <button
+              type="button"
+              data-ocid="nav.language_toggle"
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="flex items-center gap-1.5 px-3 h-8 rounded-full text-sm font-medium transition-all duration-200 border"
+              style={{
+                background: langDropdownOpen
+                  ? "oklch(var(--gold) / 0.12)"
+                  : "oklch(var(--surface-2))",
+                borderColor: langDropdownOpen
+                  ? "oklch(var(--gold) / 0.4)"
+                  : "oklch(var(--border))",
+                color: langDropdownOpen
+                  ? "oklch(var(--gold))"
+                  : "oklch(var(--muted-foreground))",
+              }}
+            >
+              <Languages className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="text-base leading-none">{currentLang.flag}</span>
+              <ChevronDown
+                className={`w-3 h-3 transition-transform duration-200 ${langDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {langDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 w-44 rounded-xl overflow-hidden shadow-lg z-50 border"
+                  style={{
+                    background: "oklch(var(--surface))",
+                    borderColor: "oklch(var(--border))",
+                  }}
+                >
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      data-ocid={`nav.lang_${lang.code}_button`}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setLangDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-150 text-left"
+                      style={{
+                        background:
+                          language === lang.code
+                            ? "oklch(var(--gold) / 0.1)"
+                            : "transparent",
+                        color:
+                          language === lang.code
+                            ? "oklch(var(--gold))"
+                            : "oklch(var(--foreground))",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (language !== lang.code) {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.background = "oklch(var(--muted) / 0.5)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (language !== lang.code) {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.background = "transparent";
+                        }
+                      }}
+                    >
+                      <span className="text-lg leading-none">{lang.flag}</span>
+                      <span>{lang.label}</span>
+                      {language === lang.code && (
+                        <span className="ml-auto text-xs">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Click outside handler */}
+            {langDropdownOpen && (
+              <div
+                role="button"
+                tabIndex={-1}
+                aria-label="Close language menu"
+                className="fixed inset-0 z-40"
+                onClick={() => setLangDropdownOpen(false)}
+                onKeyDown={(e) =>
+                  e.key === "Escape" && setLangDropdownOpen(false)
+                }
+              />
+            )}
+          </div>
+
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground font-medium px-2.5 py-1 rounded-full bg-muted/50">
@@ -168,7 +278,7 @@ export function Navbar() {
                 className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
               >
                 <LogOut className="w-4 h-4 mr-1.5" />
-                Logout
+                {t("nav.logout")}
               </Button>
             </div>
           ) : (
@@ -186,7 +296,7 @@ export function Navbar() {
                 className="font-semibold text-sm opacity-75"
               >
                 <Wallet className="w-4 h-4 mr-1.5" />
-                Connect Wallet
+                {t("nav.connect_wallet")}
               </Button>
               <div
                 className="absolute top-full right-0 mt-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 flex items-center gap-1.5"
@@ -197,25 +307,113 @@ export function Navbar() {
                 }}
               >
                 <Clock className="w-3 h-3" />
-                Wallet Integration Coming Soon
+                {t("nav.wallet_coming_soon")}
               </div>
             </div>
           )}
         </div>
 
-        {/* Mobile menu toggle */}
-        <button
-          type="button"
-          className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? (
-            <X className="w-5 h-5" />
-          ) : (
-            <Menu className="w-5 h-5" />
-          )}
-        </button>
+        {/* Mobile right side: language + hamburger */}
+        <div className="md:hidden flex items-center gap-1.5">
+          {/* Language Selector - Mobile (beside hamburger) */}
+          <div className="relative">
+            <button
+              type="button"
+              data-ocid="nav.language_toggle_mobile"
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="flex items-center gap-1 px-2.5 h-8 rounded-full text-sm font-medium transition-all duration-200 border"
+              style={{
+                background: langDropdownOpen
+                  ? "oklch(var(--gold) / 0.12)"
+                  : "oklch(var(--surface-2))",
+                borderColor: langDropdownOpen
+                  ? "oklch(var(--gold) / 0.4)"
+                  : "oklch(var(--border))",
+                color: langDropdownOpen
+                  ? "oklch(var(--gold))"
+                  : "oklch(var(--muted-foreground))",
+              }}
+            >
+              <Languages className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="text-base leading-none">{currentLang.flag}</span>
+              <ChevronDown
+                className={`w-3 h-3 transition-transform duration-200 ${langDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {langDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 w-44 rounded-xl overflow-hidden shadow-lg z-50 border"
+                  style={{
+                    background: "oklch(var(--surface))",
+                    borderColor: "oklch(var(--border))",
+                  }}
+                >
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      data-ocid={`nav.lang_${lang.code}_button_mobile`}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setLangDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-150 text-left"
+                      style={{
+                        background:
+                          language === lang.code
+                            ? "oklch(var(--gold) / 0.1)"
+                            : "transparent",
+                        color:
+                          language === lang.code
+                            ? "oklch(var(--gold))"
+                            : "oklch(var(--foreground))",
+                      }}
+                    >
+                      <span className="text-lg leading-none">{lang.flag}</span>
+                      <span>{lang.label}</span>
+                      {language === lang.code && (
+                        <span className="ml-auto text-xs">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {langDropdownOpen && (
+              <div
+                role="button"
+                tabIndex={-1}
+                aria-label="Close language menu"
+                className="fixed inset-0 z-40"
+                onClick={() => setLangDropdownOpen(false)}
+                onKeyDown={(e) =>
+                  e.key === "Escape" && setLangDropdownOpen(false)
+                }
+              />
+            )}
+          </div>
+
+          {/* Hamburger */}
+          <button
+            type="button"
+            className="w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
@@ -256,7 +454,7 @@ export function Navbar() {
                   className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
                 >
                   <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-                  Apply for Launch
+                  {t("nav.apply_launch")}
                 </a>
                 <a
                   href="https://doggy.market/$pad"
@@ -267,7 +465,7 @@ export function Navbar() {
                   className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-gold hover:bg-gold/10 transition-all"
                 >
                   <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-                  Buy on Doggy Market
+                  {t("nav.buy_doggy")}
                 </a>
               </div>
               <div className="pt-1 pb-1">
@@ -282,7 +480,7 @@ export function Navbar() {
                     className="w-full justify-start text-muted-foreground"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Logout
+                    {t("nav.logout")}
                   </Button>
                 ) : (
                   <div className="space-y-1.5">
@@ -299,23 +497,24 @@ export function Navbar() {
                       }}
                     >
                       <Wallet className="w-4 h-4 mr-2" />
-                      Connect Wallet
+                      {t("nav.connect_wallet")}
                     </Button>
                     <div
                       className="flex items-center justify-center gap-1.5 text-xs font-medium py-1"
                       style={{ color: "oklch(var(--gold))" }}
                     >
                       <Clock className="w-3 h-3" />
-                      Wallet Integration Coming Soon
+                      {t("nav.wallet_coming_soon")}
                     </div>
                   </div>
                 )}
               </div>
+
               {/* Theme Toggle - Mobile */}
               <div className="border-t border-border/40 pt-2 mt-1 px-1">
                 <div className="flex items-center justify-between px-2.5 py-2">
                   <span className="text-sm font-medium text-muted-foreground">
-                    Theme
+                    {t("nav.theme")}
                   </span>
                   {/* Pill toggle */}
                   <fieldset
@@ -349,7 +548,7 @@ export function Navbar() {
                       }}
                     >
                       <Sun className="w-3.5 h-3.5 flex-shrink-0" />
-                      Light
+                      {t("nav.light")}
                     </button>
                     <button
                       type="button"
@@ -372,7 +571,7 @@ export function Navbar() {
                       }}
                     >
                       <Moon className="w-3.5 h-3.5 flex-shrink-0" />
-                      Dark
+                      {t("nav.dark")}
                     </button>
                   </fieldset>
                 </div>
